@@ -33,6 +33,7 @@
 
 #include <xc.h>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 #define _XTAL_FREQ 8000000
 #include<stdint.h>
 
@@ -40,6 +41,11 @@
 #define _XTAL_FREQ 4000000//Reloj interno 4Mhz
 #include<stdint.h>
 
+=======
+#define _XTAL_FREQ 4000000//Reloj interno 4Mhz
+#include<stdint.h>
+
+>>>>>>> Stashed changes
 
 
 uint8_t referencia;//variable para contador de referencia
@@ -47,8 +53,14 @@ uint8_t banderaS;//bandera boton de suma
 uint8_t banderaR;//bandera boton de resta
 uint8_t Control;
 uint8_t Control2;
+<<<<<<< Updated upstream
 uint8_t Hexadecimal[16]={0x3F,0x06,0x5B,0x4F,0x66,0x6D,0x7D,0x07,0x7F,0x67,0x77,0x7C,0x39,0x5E,0x79,0x71};
 uint8_t Hexadecimal2[16]={0x3F,0x06,0x5B,0x4F,0x66,0x6D,0x7D,0x07,0x7F,0x67,0x77,0x7C,0x39,0x5E,0x79,0x71};//Numeros para el display
+=======
+uint8_t Control3;
+uint8_t Hexadecimal[16]={63,6,91,79,102,109,125,7,127,103,119,124,57,94,121,113};
+uint8_t Hexadecimal2[16]={63,6,91,79,102,109,125,7,127,103,119,124,57,94,121,113};//Numeros para el display
+>>>>>>> Stashed changes
 uint8_t Unidades;
 uint8_t Decenas;
 
@@ -57,6 +69,10 @@ void inicio(void);
 void puertos(void);
 void botones(void);
 void Alarma(void);
+<<<<<<< Updated upstream
+=======
+void Cambio(void);
+>>>>>>> Stashed changes
 
 void __interrupt() isr(void){//direccion 0x04 siempre en la interrupcion
     if(RBIF == 1){
@@ -81,22 +97,36 @@ void __interrupt() isr(void){//direccion 0x04 siempre en la interrupcion
     }
     //--------------------------------TMR0--------------------------------------
     if(TMR0IF==1){
+<<<<<<< Updated upstream
         TMR0=100;
         PORTDbits.RD6=~PORTDbits.RD6;
         PORTDbits.RD7=~PORTDbits.RD7;
         TMR0IF=0;
         return;
+=======
+        Cambio();
+        TMR0=6;
+        TMR0IF=0;
+        
+>>>>>>> Stashed changes
     }
     //--------------------------------ADC---------------------------------------
     if(ADCON0bits.GO_DONE==0){
         PIR1bits.ADIF=0;
         Control=ADRESH;
         Control2=ADRESH;
+<<<<<<< Updated upstream
         PORTDbits.RD5=1;
         ADCON0bits.GO_DONE=1;
         RBIF =0;
     }
     
+=======
+        ADCON0bits.GO_DONE=1;
+        RBIF =0;
+    }
+    TMR0IF=0;
+>>>>>>> Stashed changes
     
     
 }
@@ -106,8 +136,12 @@ void main(void){
         banderaS=0;//botones habilitados desde el inicio
         banderaR=0;
         referencia=0;
+<<<<<<< Updated upstream
         PORTDbits.RD7=1;
         PORTDbits.RD6=0;
+=======
+        Control3=1;
+>>>>>>> Stashed changes
     while(1){
         botones();
         puertos();
@@ -163,11 +197,16 @@ void inicio(void){// Se definen los puertos de entrada y salida
     PORTB=0;
     PORTC=0;
     PORTD=0;
+<<<<<<< Updated upstream
     TMR0=100;
+=======
+    TMR0=6;
+>>>>>>> Stashed changes
 }
 
 
 void InDisplay(void){
+<<<<<<< Updated upstream
     Unidades=Control & 0x0F;
     Decenas=((Control2 & 0xF0)/16);
     if(PORTDbits.RD6==1){
@@ -176,6 +215,23 @@ void InDisplay(void){
     if(PORTDbits.RD7==1){
         PORTC=~Hexadecimal2[Decenas];
     }
+=======
+    Unidades=Control/16;
+    Decenas=Control2%16;
+    if(Control3==0){
+        PORTC=~Hexadecimal[Unidades];
+        PORTDbits.RD6=1;
+        PORTDbits.RD7=0;
+//        PORTDbits.RD5=0;
+    }
+    if(Control3==1){
+        PORTC=~Hexadecimal2[Decenas];
+        PORTDbits.RD6=0;
+        PORTDbits.RD7=1;
+//        PORTDbits.RD5=1;
+    }
+
+>>>>>>> Stashed changes
     return;
 
 }
@@ -201,6 +257,19 @@ void botones(void){//unicamente habilita las banderas
 }
 void puertos(void){
     PORTA=referencia;
+}
+
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+void Cambio(void){
+    if(Control3==0){
+        Control3=1;
+    }
+    else{
+        Control3=0;   
+    }
+    return;
 }
 
 >>>>>>> Stashed changes
